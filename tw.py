@@ -281,7 +281,12 @@ def run(cmd):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="動画を X(Twitter) 向けにエンコードし直します。")
+    # パイプやファイルに出力するとき、英語版 Windows (cp1252) だと日本語を書けずに落ちるので UTF-8 にする
+    for stream in (sys.stdout, sys.stderr):
+        if not stream.isatty():
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
+    ap =argparse.ArgumentParser(description="動画を X(Twitter) 向けにエンコードし直します。")
     ap.add_argument("inputs", nargs="*", type=Path, help="入力動画 (省略するとファイル選択画面を開く)")
     ap.add_argument("-o", "--out", help="出力先フォルダ (デフォルト: 入力と同じ場所に <名前>_x.mp4)")
     ap.add_argument("--fast", action="store_true", help="NVENC で高速エンコード (画質はやや落ちる)")
@@ -289,8 +294,9 @@ def main():
     ap.add_argument("--cut", action="store_true", help="2:20 を超える分を自動で切る")
     ap.add_argument("--denoise", action="store_true", help="軽いノイズ除去 (暗所・粗い映像向け)")
     ap.add_argument("--ffmpeg", help="ffmpeg.exe またはそのフォルダの場所")
+    ap.add_argument("--no-wait", action="store_true", help="終了時に Enter を待たない (自動処理用)")
     args = ap.parse_args()
-    args.interactive = launched_from_explorer()
+    args.interactive = launched_from_explorer() and not args.no_wait
 
     try:
         failed = run_all(args)
