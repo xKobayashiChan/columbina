@@ -1,0 +1,13 @@
+out/
+*.mp4
+*.mov
+*.mkv
+*.webm
+__pycache__/
+*.log
+*.log.mbtree
+.venv/
+vendor/
+build/
+dist/
+*.spec
