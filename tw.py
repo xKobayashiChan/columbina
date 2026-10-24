@@ -281,7 +281,12 @@ def run(cmd):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="動画を X(Twitter) 向けにエンコードし直します。")
+    # パイプやファイルに出力するとき、英語版 Windows (cp1252) だと日本語を書けずに落ちるので UTF-8 にする
+    for stream in (sys.stdout, sys.stderr):
+        if not stream.isatty():
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
+    ap =argparse.ArgumentParser(description="動画を X(Twitter) 向けにエンコードし直します。")
     ap.add_argument("inputs", nargs="*", type=Path, help="入力動画 (省略するとファイル選択画面を開く)")
     ap.add_argument("-o", "--out", help="出力先フォルダ (デフォルト: 入力と同じ場所に <名前>_x.mp4)")
     ap.add_argument("--fast", action="store_true", help="NVENC で高速エンコード (画質はやや落ちる)")
