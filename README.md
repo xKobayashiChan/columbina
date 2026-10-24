@@ -7,19 +7,36 @@ X はアップロードされた動画を必ず再エンコードします。高
 
 ## 配布用 exe（PC に詳しくない人向け）
 
-`dist/X動画変換.zip` を渡して、解凍したフォルダの `X動画変換.exe` に動画をドラッグ&ドロップしてもらうだけで使えます。
-Python と ffmpeg は同梱しているので、相手の PC には何もインストールしなくて大丈夫です。説明は zip 内の `使い方.txt` に書いてあります。
+[Releases](https://github.com/xKobayashiChan/columbina/releases/latest) から `X-video-converter-setup-<バージョン>.exe` をダウンロードして開くだけで使えます。
+管理者権限はいりません。インストールすると、デスクトップのショートカットと、右クリックの「送る」メニューに「X動画変換」が追加されます。
+動画をショートカットにドラッグ&ドロップするか、動画を右クリック →「送る」→「X動画変換」で変換できます。
+インストールしたくない人向けに zip 版もあります。
 
-ビルド方法:
+Python と ffmpeg は同梱しているので、相手の PC には何も入れる必要はありません。説明は同梱の `使い方.txt` に書いてあります。
+
+### リリース方法 (GitHub Actions)
+
+`main` への push と PR では毎回、exe・zip・setup.exe のビルドと動作確認（サイレントインストールしてテスト動画を変換）を行います。
+できたファイルは Actions の実行結果ページの Artifacts からダウンロードできます。
+
+新しいバージョンを配るときは、タグを push するだけです。ビルド後に GitHub Release が自動で作られ、setup.exe と zip が載ります。
+
+```
+git tag v1.1.0
+git push origin v1.1.0
+```
+
+### ローカルでビルドする場合
 
 ```
 python -m venv .venv
 .venv\Scripts\python -m pip install pyinstaller==6.11.1
-# vendorfmpeg\ に ffmpeg.exe / ffprobe.exe / LICENSE を置く（https://www.gyan.dev/ffmpeg/builds/ の essentials）
-.venv\Scripts\python build.py   # → dist\X動画変換.zip
+winget install JRSoftware.InnoSetup
+# vendor\ffmpeg\ に ffmpeg.exe / ffprobe.exe / LICENSE を置く（https://www.gyan.dev/ffmpeg/builds/ の essentials）
+.venv\Scripts\python build.py --version 1.1.0   # → dist\ に zip と setup.exe
 ```
 
-同梱している FFmpeg は GPL v3 です。配布するときは zip に入っている `FFmpeg-LICENSE.txt` を消さないでください。
+同梱している FFmpeg は GPL v3 です。配布物に入っている `FFmpeg-LICENSE.txt` は消さないでください。
 
 ## コマンドラインで使う場合の必要なもの
 

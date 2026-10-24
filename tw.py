@@ -289,8 +289,9 @@ def main():
     ap.add_argument("--cut", action="store_true", help="2:20 を超える分を自動で切る")
     ap.add_argument("--denoise", action="store_true", help="軽いノイズ除去 (暗所・粗い映像向け)")
     ap.add_argument("--ffmpeg", help="ffmpeg.exe またはそのフォルダの場所")
+    ap.add_argument("--no-wait", action="store_true", help="終了時に Enter を待たない (自動処理用)")
     args = ap.parse_args()
-    args.interactive = launched_from_explorer()
+    args.interactive = launched_from_explorer() and not args.no_wait
 
     try:
         failed = run_all(args)
